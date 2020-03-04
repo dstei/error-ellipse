@@ -36,7 +36,7 @@ def get_error_ellipse_parameters(cov, confidence=None, sigma=None):
     if(cov.shape != (2,2)):
         raise ValueError("The covariance matrix needs to be of shape (2,2)")
     if(confidence == None and sigma == None):
-        raise RuntimeError("One of confidence or sigma is needed as argument")
+        raise RuntimeError("One of confidence and sigma is needed as input argument")
     if(confidence and sigma):
         print("Argument sigma is ignored as confidence is also provided!")
     
@@ -58,6 +58,10 @@ def get_error_ellipse_parameters(cov, confidence=None, sigma=None):
 
     return semi_major, semi_minor, angle, confidence, sigma
 
+
+##################
+## Example usage 
+##################
 if(__name__ == "__main__"):
     mean_x, mean_y = 5, -2
     covariance = [[1, -2.04], [-2.04, 5.16]]
@@ -70,13 +74,18 @@ if(__name__ == "__main__"):
     plt.scatter(data_points[:,0], data_points[:,1], alpha = .5)
 
     confidence = 0.95
-    semi_major, semi_minor, angle, sigma, confidence\
+    semi_major, semi_minor, angle, confidence, sigma\
         = get_error_ellipse_parameters(covariance, confidence = confidence)
-    ax.add_patch(Ellipse((mean_x, mean_y), 2*semi_major, 2*semi_minor, 180*angle/np.pi, facecolor = 'none', edgecolor='red'))
+    ax.add_patch(Ellipse((mean_x, mean_y), 2*semi_major, 2*semi_minor, 180*angle/np.pi,\
+            facecolor = 'none', edgecolor = 'red',\
+            label = 'Confidence = {:.0f}% (sigma = {:.2f})'.format(confidence * 100, sigma)))
 
     sigma = 1
-    semi_major, semi_minor, angle, sigma, confidence\
+    semi_major, semi_minor, angle, confidence, sigma,\
         = get_error_ellipse_parameters(covariance, sigma = sigma)
-    ax.add_patch(Ellipse((mean_x, mean_y), 2*semi_major, 2*semi_minor, 180*angle/np.pi, facecolor = 'none', edgecolor='yellow'))
-    fig.savefig('plot.png')    
+    ax.add_patch(Ellipse((mean_x, mean_y), 2*semi_major, 2*semi_minor, 180*angle/np.pi,\
+            facecolor = 'none', edgecolor = 'yellow',\
+            label = 'Sigma = {:.0f} (confidence = {:.1f}%)'.format(sigma, confidence * 100)))
+    ax.legend()
+#    fig.savefig('plot.png')
     plt.show()
