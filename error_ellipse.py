@@ -43,17 +43,19 @@ def get_error_ellipse_parameters(cov, confidence=None, sigma=None):
     if(confidence == None):
         if(sigma < 0):
             raise ValueError("Sigma needs to be positive")
-        confidence = chi2.cdf(sigma, 2)
+        scaling = np.square(sigma)
+        confidence = chi2.cdf(scaling, 2)
     if(sigma == None):
         if(confidence > 1 or confidence < 0):
             raise ValueError("Ensure that confidence lies between 0 and 1")
-        sigma = chi2.ppf(confidence, 2)
+        scaling = chi2.ppf(confidence, 2)
+        sigma = np.sqrt(scaling)
     eigenvalues, eigenvectors = np.linalg.eig(cov)
     
     maxindex = np.argmax(eigenvalues)
     vx, vy = eigenvectors[:, maxindex]
     angle = np.arctan2(vy, vx)
-    semi_minor, semi_major = np.sqrt(np.sort(eigenvalues) * sigma)
+    semi_minor, semi_major = np.sqrt(np.sort(eigenvalues) * scaling)
     print("With sigma = {:.2f}, {:.1f}% of data points lie within ellipse.".format(sigma, confidence * 100))
 
     return semi_major, semi_minor, angle, confidence, sigma
@@ -87,5 +89,5 @@ if(__name__ == "__main__"):
             facecolor = 'none', edgecolor = 'yellow',\
             label = 'Sigma = {:.0f} (confidence = {:.1f}%)'.format(sigma, confidence * 100)))
     ax.legend()
-#    fig.savefig('plot.png')
+    fig.savefig('plot.png')
     plt.show()
