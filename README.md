@@ -12,7 +12,7 @@ or, more generally for correlated data with a covariance matrix having off-diago
 
 <img src="https://render.githubusercontent.com/render/math?math=(x, y)C^{-1} (x\atop y) = s">
 
-with the covariance matrix C and a scaling parameter s (corresponding to the sigma from above).
+with the covariance matrix C and a scaling parameter s (s is the square of sigma from above).
 
 The scaling parameter s is chi-square distributed (sum of two Gaussian variables). This distribution can be used to obtain a scaling factor leading to a certain specified amount of data lying within the ellipse.
 For a more detailed explanation, see for example [visiondummy's article](https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/).
